@@ -12,6 +12,7 @@ import {
     Legend,
     Filler
 } from 'chart.js';
+import { PRIMARY_COLOR } from '@/constants/colors';
 
 ChartJS.register(
     CategoryScale,
@@ -31,11 +32,11 @@ export default function SalesChart() {
             {
                 label: 'Sales',
                 data: [3000, 4500, 3200, 5100, 4900, 6000, 5500, 7200, 6800, 8100, 7500, 9000],
-                borderColor: '#70908B',
+                borderColor: PRIMARY_COLOR,
                 backgroundColor: 'rgba(112, 144, 139, 0.1)',
                 tension: 0.4,
                 fill: true,
-                pointBackgroundColor: '#70908B',
+                pointBackgroundColor: PRIMARY_COLOR,
                 pointBorderColor: '#fff',
                 pointBorderWidth: 2,
                 pointRadius: 5,
@@ -52,7 +53,7 @@ export default function SalesChart() {
                 display: false,
             },
             tooltip: {
-                backgroundColor: '#70908B',
+                backgroundColor: PRIMARY_COLOR,
                 padding: 12,
                 titleColor: '#fff',
                 bodyColor: '#E0EFF6',
@@ -91,11 +92,11 @@ export default function SalesChart() {
         <div className="bg-white rounded-2xl shadow-lg border border-[#C4C4C4]/20 p-6">
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h3 className="text-lg font-bold text-[#70908B]">Sales Overview</h3>
+                    <h3 className={`text-lg font-bold text-[${PRIMARY_COLOR}]`}>Sales Overview</h3>
                     <p className="text-sm text-slate-600 mt-1">Monthly revenue trends</p>
                 </div>
                 <div className="flex gap-2">
-                    <button className="px-4 py-2 text-sm font-medium text-white bg-[#70908B] rounded-lg hover:bg-[#70908B]/90 transition-colors">
+                    <button className={`px-4 py-2 text-sm font-medium text-white bg-[${PRIMARY_COLOR}] rounded-lg hover:bg-[${PRIMARY_COLOR}]/90 transition-colors`}>
                         This Year
                     </button>
                     <button className="px-4 py-2 text-sm font-medium text-slate-600 bg-[#E0EFF6] rounded-lg hover:bg-[#E0EFF6]/80 transition-colors">
