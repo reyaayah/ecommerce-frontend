@@ -13,6 +13,8 @@ import {
     Plus
 } from "lucide-react"
 import Image from "next/image"
+import PrimaryButton from "@/components/buttons/primaryButton"
+import { useRouter } from "next/navigation"
 
 // Category data
 const categories = [
@@ -43,6 +45,7 @@ const products = [
 export default function CategoriesPage() {
     const [activeTab, setActiveTab] = useState("All Product (345)")
     const [searchQuery, setSearchQuery] = useState("")
+    const router = useRouter()
 
     const tabs = ["All Product (345)", "Featured Products", "On Sale", "Out of Stock"]
 
@@ -82,7 +85,22 @@ export default function CategoriesPage() {
 
             {/* Discover Section */}
             <div className="bg-white rounded-2xl shadow-lg border border-[#C4C4C4]/20 p-6 mb-6">
-                <h2 className="text-lg font-bold text-slate-800 mb-6">Discover</h2>
+                <div className="flex-row mb-4 flex items-center justify-between">
+                    <h2 className="text-lg font-bold text-slate-800 mb-6">Discover</h2>
+                    {/* Action Bar */}
+                    <div className="flex-row flex items-center gap-2">
+                        <PrimaryButton
+                            icon={<Plus size={18} />}
+                            onClick={() => router.push("/admin/categories/add")}
+                        >
+                            Add Category
+                        </PrimaryButton>
+
+                        <button className="px-6 py-2.5 bg-white border border-[#C4C4C4]/30 text-slate-700 rounded-xl font-medium hover:bg-[#E0EFF6] transition-colors">
+                            More Action
+                        </button>
+                    </div>
+                </div>
 
                 <div className="grid grid-cols-4 gap-4 mb-4">
                     {categories.map((category) => (
@@ -106,20 +124,7 @@ export default function CategoriesPage() {
                 </button>
             </div>
 
-            {/* Action Bar */}
-            <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                    <button
-                        className="px-6 py-2.5 bg-[#70908B] text-white rounded-xl font-medium hover:bg-[#70908B]/90 transition-colors flex items-center gap-2 shadow-lg shadow-[#70908B]/30"
-                    >
-                        <Plus size={18} />
-                        Add Product
-                    </button>
-                    <button className="px-6 py-2.5 bg-white border border-[#C4C4C4]/30 text-slate-700 rounded-xl font-medium hover:bg-[#E0EFF6] transition-colors">
-                        More Action
-                    </button>
-                </div>
-            </div>
+
 
             {/* Tabs */}
             <div className="bg-white rounded-t-2xl shadow-lg border border-[#C4C4C4]/20 border-b-0">
@@ -254,6 +259,6 @@ export default function CategoriesPage() {
                     </button>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
