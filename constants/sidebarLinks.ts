@@ -7,7 +7,7 @@ import {
     Layers,
 } from "lucide-react"
 export const links = [
-    { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
 
     {
         name: "Products",
