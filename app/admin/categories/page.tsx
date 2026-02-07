@@ -16,6 +16,7 @@ import Image from "next/image"
 import PrimaryButton from "@/components/buttons/primaryButton"
 import { useRouter } from "next/navigation"
 import PageHeader from "@/components/ui/PageHeader"
+import Pagination from "@/components/ui/Pagination.tsx"
 
 // Category data
 const categories = [
@@ -51,6 +52,7 @@ export default function CategoriesPage() {
     const router = useRouter()
     const categoryScrollRef = useRef<HTMLDivElement | null>(null)
 
+    const [page, setPage] = useState<number>(1)
     const scrollCategories = () => {
         if (!categoryScrollRef.current) return
 
@@ -231,36 +233,12 @@ export default function CategoriesPage() {
                     </tbody>
                 </table>
 
-                {/* Pagination */}
-                <div className="flex items-center justify-between px-6 py-4 border-t border-[#E0EFF6]">
-                    <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 hover:text-[#70908B] transition-colors">
-                        <ChevronRight size={16} className="rotate-180" />
-                        Previous
-                    </button>
+                <Pagination
+                    currentPage={page}
+                    totalPages={24}
+                    onPageChange={setPage}
+                />
 
-                    <div className="flex items-center gap-2">
-                        {[1, 2, 3, 4, 5].map((page) => (
-                            <button
-                                key={page}
-                                className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${page === 1
-                                    ? "bg-[#70908B] text-white shadow-md"
-                                    : "bg-[#E0EFF6] text-slate-600 hover:bg-[#70908B] hover:text-white"
-                                    }`}
-                            >
-                                {page}
-                            </button>
-                        ))}
-                        <span className="px-2 text-slate-400">...</span>
-                        <button className="w-8 h-8 rounded-lg text-sm font-medium bg-[#E0EFF6] text-slate-600 hover:bg-[#70908B] hover:text-white transition-colors">
-                            24
-                        </button>
-                    </div>
-
-                    <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 hover:text-[#70908B] transition-colors">
-                        Next
-                        <ChevronRight size={16} />
-                    </button>
-                </div>
             </div>
         </div >
     )
