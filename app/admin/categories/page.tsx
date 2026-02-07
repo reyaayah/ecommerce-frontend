@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import {
     Search,
     Bell,
@@ -15,6 +15,8 @@ import {
 import Image from "next/image"
 import PrimaryButton from "@/components/buttons/primaryButton"
 import { useRouter } from "next/navigation"
+import PageHeader from "@/components/ui/PageHeader"
+import Pagination from "@/components/ui/Pagination.tsx"
 
 // Category data
 const categories = [
@@ -26,6 +28,8 @@ const categories = [
     { id: 6, name: "Toys & Games", icon: "🎮", color: "bg-yellow-100" },
     { id: 7, name: "Health & Fitness", icon: "💪", color: "bg-red-100" },
     { id: 8, name: "Books", icon: "📚", color: "bg-indigo-100" },
+    { id: 9, name: "Health & Fitness", icon: "💪", color: "bg-red-100" },
+    { id: 10, name: "Books", icon: "📚", color: "bg-indigo-100" },
 ]
 
 // Product data
@@ -46,42 +50,31 @@ export default function CategoriesPage() {
     const [activeTab, setActiveTab] = useState("All Product (345)")
     const [searchQuery, setSearchQuery] = useState("")
     const router = useRouter()
+    const categoryScrollRef = useRef<HTMLDivElement | null>(null)
+
+    const [page, setPage] = useState<number>(1)
+    const scrollCategories = () => {
+        if (!categoryScrollRef.current) return
+
+        categoryScrollRef.current.scrollBy({
+            left: 300,
+            behavior: "smooth",
+        })
+    }
 
     const tabs = ["All Product (345)", "Featured Products", "On Sale", "Out of Stock"]
 
     return (
         <div className="min-h-screen ">
             {/* Header */}
-            <div className="flex items-center justify-between mb-8">
-                <h1 className="text-3xl font-bold text-[#70908B]">Categories</h1>
-
-                <div className="flex items-center gap-4">
-                    {/* Search Bar */}
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="Search data, users, or reports"
-                            className="w-96 pl-10 pr-4 py-2.5 bg-white border border-[#C4C4C4]/30 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#70908B]/30 focus:border-[#70908B]"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#C4C4C4]" size={18} />
-                    </div>
-
-                    {/* Icons */}
-                    <button className="p-2.5 bg-white border border-[#C4C4C4]/30 rounded-xl hover:bg-[#E0EFF6] transition-colors">
-                        <Bell size={20} className="text-slate-600" />
-                    </button>
-                    <button className="p-2.5 bg-white border border-[#C4C4C4]/30 rounded-xl hover:bg-[#E0EFF6] transition-colors">
-                        <Filter size={20} className="text-slate-600" />
-                    </button>
-
-                    {/* Profile */}
-                    <div className="w-10 h-10 bg-gradient-to-br from-[#70908B] to-[#70908B]/80 rounded-full flex items-center justify-center text-white font-semibold">
-                        JD
-                    </div>
-                </div>
-            </div>
+            <PageHeader
+                title="Categories"
+                searchValue={searchQuery}
+                onSearchChange={setSearchQuery}
+                showSearch={true}
+                showBell={true}
+                showFilter={true}
+            />
 
             {/* Discover Section */}
             <div className="bg-white rounded-2xl shadow-lg border border-[#C4C4C4]/20 p-6 mb-6">
@@ -101,27 +94,39 @@ export default function CategoriesPage() {
                         </button>
                     </div>
                 </div>
+                <div className="relative">
+                    <div
+                        ref={categoryScrollRef}
+                        className="flex gap-4 overflow-x-auto scroll-smooth pb-2 no-scrollbar"
+                    >
+                        {categories.map((category) => (
+                            <button
+                                key={category.id}
+                                className="min-w-[220px] flex items-center gap-3 p-4 bg-[#E0EFF6]/40 hover:bg-[#E0EFF6] rounded-xl transition-all border border-[#C4C4C4]/20 hover:shadow-md group"
+                            >
+                                <div className={`${category.color} p-3 rounded-lg text-2xl`}>
+                                    {category.icon}
+                                </div>
+                                <span className="text-sm font-semibold text-slate-700 group-hover:text-[#70908B]">
+                                    {category.name}
+                                </span>
+                            </button>
+                        ))}
+                    </div>
 
-                <div className="grid grid-cols-4 gap-4 mb-4">
-                    {categories.map((category) => (
-                        <button
-                            key={category.id}
-                            className="flex items-center gap-3 p-4 bg-[#E0EFF6]/40 hover:bg-[#E0EFF6] rounded-xl transition-all border border-[#C4C4C4]/20 hover:shadow-md group"
-                        >
-                            <div className={`${category.color} p-3 rounded-lg text-2xl`}>
-                                {category.icon}
-                            </div>
-                            <span className="text-sm font-semibold text-slate-700 group-hover:text-[#70908B]">
-                                {category.name}
-                            </span>
-                        </button>
-                    ))}
+                    {/* Right Arrow */}
+                    <button
+                        onClick={scrollCategories}
+                        className="absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow-md border border-[#C4C4C4]/30 p-2 rounded-full hover:bg-[#E0EFF6] transition"
+                    >
+                        <ChevronRight size={20} className="text-[#70908B]" />
+                    </button>
                 </div>
 
-                {/* Scroll Indicator */}
-                <button className="w-full flex items-center justify-center gap-2 text-[#70908B] hover:text-[#70908B]/80 transition-colors">
-                    <ChevronRight size={20} />
-                </button>
+
+
+
+
             </div>
 
 
@@ -228,36 +233,12 @@ export default function CategoriesPage() {
                     </tbody>
                 </table>
 
-                {/* Pagination */}
-                <div className="flex items-center justify-between px-6 py-4 border-t border-[#E0EFF6]">
-                    <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 hover:text-[#70908B] transition-colors">
-                        <ChevronRight size={16} className="rotate-180" />
-                        Previous
-                    </button>
+                <Pagination
+                    currentPage={page}
+                    totalPages={24}
+                    onPageChange={setPage}
+                />
 
-                    <div className="flex items-center gap-2">
-                        {[1, 2, 3, 4, 5].map((page) => (
-                            <button
-                                key={page}
-                                className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${page === 1
-                                    ? "bg-[#70908B] text-white shadow-md"
-                                    : "bg-[#E0EFF6] text-slate-600 hover:bg-[#70908B] hover:text-white"
-                                    }`}
-                            >
-                                {page}
-                            </button>
-                        ))}
-                        <span className="px-2 text-slate-400">...</span>
-                        <button className="w-8 h-8 rounded-lg text-sm font-medium bg-[#E0EFF6] text-slate-600 hover:bg-[#70908B] hover:text-white transition-colors">
-                            24
-                        </button>
-                    </div>
-
-                    <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 hover:text-[#70908B] transition-colors">
-                        Next
-                        <ChevronRight size={16} />
-                    </button>
-                </div>
             </div>
         </div >
     )

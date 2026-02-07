@@ -1,5 +1,6 @@
 import SalesChart from "@/components/SalesChart"
 import StatCard from "@/components/StatCard"
+import PageHeader from "@/components/ui/PageHeader"
 import { PRIMARY_COLOR } from "@/constants/colors"
 import { TrendingUp, ShoppingBag, Package, Users } from "lucide-react"
 
@@ -10,7 +11,10 @@ export default function DashboardPage() {
             className="min-h-screen"
         >
             {/* Header */}
-            <div className="mb-8">
+            <PageHeader
+                title="Dashboard"
+            />
+            {/* <div className="mb-8">
                 <h2
                     className="text-3xl font-bold mb-2"
                     style={{ color: PRIMARY_COLOR }}
@@ -20,7 +24,7 @@ export default function DashboardPage() {
                 <p className="text-slate-600">
                     Welcome back! Here's what's happening with your store today.
                 </p>
-            </div>
+            </div> */}
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
