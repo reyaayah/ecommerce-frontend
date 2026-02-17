@@ -1,6 +1,5 @@
-import CategoryGrid from "@/components/explore/CategoryGrid";
-import CategorySidebar from "@/components/explore/CategorySidebar";
-
+import CategoryGrid from "@/components/explore/CategoryGrid"
+import CategorySidebar from "@/components/explore/CategorySidebar"
 
 export default function ExplorePage() {
     return (
