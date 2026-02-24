@@ -5,6 +5,7 @@ import {
     Users,
     Settings,
     Layers,
+    PanelsTopLeft,
 } from "lucide-react"
 export const links = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -22,7 +23,14 @@ export const links = [
     },
 
     { name: "Orders", href: "/admin/orders", icon: ShoppingCart },
-    { name: "Users", href: "/admin/users", icon: Users },
+    { name: "Customers", href: "/admin/customers", icon: Users },
     { name: "Categories", href: "/admin/categories", icon: Layers },
+    {
+        name: "Admin", href: "/admin/role", icon: PanelsTopLeft, children: [
+            { name: "Admin Role", href: "/admin/role" },
+            { name: "Admin List", href: "/admin/admins/list" },
+        ]
+    },
+    { name: "Transactions", href: "/admin/transactions", icon: ShoppingCart },
     { name: "Settings", href: "/admin/settings", icon: Settings },
 ]

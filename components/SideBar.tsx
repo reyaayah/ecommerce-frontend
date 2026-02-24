@@ -43,7 +43,7 @@ export default function Sidebar() {
             <nav className="space-y-2">
                 {links.map((link) => {
                     const Icon = link.icon
-                    const isActive = pathname === link.href
+                    const isActive = pathname.startsWith(link.href)
                     const hasChildren = !!link.children
                     const isOpen = openMenu === link.name
 
@@ -78,7 +78,7 @@ export default function Sidebar() {
                                     <div className="ml-11 mt-2 space-y-1">
                                         {link.children.map((child) => {
                                             const isChildActive =
-                                                pathname === child.href
+                                                pathname.startsWith(child.href)
 
                                             return (
                                                 <Link
