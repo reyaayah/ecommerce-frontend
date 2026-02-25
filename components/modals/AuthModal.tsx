@@ -3,6 +3,8 @@
 import { useState } from "react"
 import { X } from "lucide-react"
 import { PRIMARY_COLOR, SECONDARY_COLOR } from "@/constants/colors"
+import { loginUser, registerUser } from "@/services/auth"
+import toast from "react-hot-toast"
 
 interface Props {
     isOpen: boolean
@@ -11,8 +13,46 @@ interface Props {
 
 export default function AuthModal({ isOpen, onClose }: Props) {
     const [isLogin, setIsLogin] = useState(true)
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
+    const [loading, setLoading] = useState(false)
 
     if (!isOpen) return null
+
+    const handleRegister = async () => {
+        if (password !== confirmPassword) {
+            alert("Passwords do not match");
+            return;
+        }
+
+        try {
+            setLoading(true);
+            await registerUser({ name, email, password });
+            toast.success("Account created successfully!");
+            setIsLogin(true);
+        } catch (error: any) {
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleLogin = async () => {
+        try {
+            setLoading(true);
+            const data = await loginUser({ email, password });
+            toast.success("Logged in successfully!");
+            console.log("Login response:", data); // store token / redirect if needed
+            onClose();
+
+        } catch (error: any) {
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <div className="fixed inset-0 z-50 flex justify-end items-start bg-black/30">
@@ -39,6 +79,8 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                             <input
                                 type="email"
                                 placeholder="Enter your email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 className="w-full border-b py-2 outline-none"
                             />
                         </div>
@@ -49,6 +91,9 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                             <input
                                 type="password"
                                 placeholder="Enter password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+
                                 className="w-full border-b py-2 outline-none"
                             />
                         </div>
@@ -64,10 +109,12 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                         </p>
 
                         <button
+                            onClick={handleLogin}
+                            disabled={loading}
                             style={{ backgroundColor: PRIMARY_COLOR }}
                             className="w-full text-white py-3 rounded"
                         >
-                            Login
+                            {loading ? "Logging in..." : "Login"}
                         </button>
                     </>
                 ) : (
@@ -80,6 +127,8 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                             <input
                                 type="text"
                                 placeholder="John Doe"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                                 className="w-full border-b py-2 outline-none"
                             />
                         </div>
@@ -90,18 +139,20 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                             <input
                                 type="email"
                                 placeholder="Enter your email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 className="w-full border-b py-2 outline-none"
                             />
                         </div>
 
                         {/* Role */}
-                        <div className="mb-4">
+                        {/* <div className="mb-4">
                             <label className="text-sm font-medium">Role</label>
                             <select className="w-full border-b py-2 outline-none bg-transparent">
                                 <option value="customer">Customer</option>
                                 <option value="seller">Seller</option>
                             </select>
-                        </div>
+                        </div> */}
 
                         {/* Password */}
                         <div className="mb-4">
@@ -109,6 +160,8 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                             <input
                                 type="password"
                                 placeholder="Create password"
+                                value={password}
+                                onChange={(e) => { setPassword(e.target.value) }}
                                 className="w-full border-b py-2 outline-none"
                             />
                         </div>
@@ -119,6 +172,8 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                             <input
                                 type="password"
                                 placeholder="Confirm password"
+                                value={confirmPassword}
+                                onChange={(e) => { setConfirmPassword(e.target.value) }}
                                 className="w-full border-b py-2 outline-none"
                             />
                         </div>
@@ -132,12 +187,13 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                                 Login
                             </button>
                         </p>
-
                         <button
+                            onClick={handleRegister}
+                            disabled={loading}
                             style={{ backgroundColor: PRIMARY_COLOR }}
                             className="w-full text-white py-3 rounded"
                         >
-                            Sign Up
+                            {loading ? "Creating..." : "Sign Up"}
                         </button>
                     </>
                 )}
