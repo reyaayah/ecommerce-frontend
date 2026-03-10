@@ -44,7 +44,7 @@ export default function AuthModal({ isOpen, onClose }: Props) {
             setLoading(true);
             const data = await loginUser({ email, password });
             toast.success("Logged in successfully!");
-            console.log("Login response:", data); // store token / redirect if needed
+            console.log("Login response:", data);
             onClose();
 
         } catch (error: any) {
@@ -57,23 +57,17 @@ export default function AuthModal({ isOpen, onClose }: Props) {
     return (
         <div className="fixed inset-0 z-50 flex justify-end items-start bg-black/30">
 
-            {/* Modal Box */}
             <div className="w-full max-w-sm bg-white shadow-lg m-4 rounded-lg p-6 relative animate-slideDown">
-
-                {/* Close */}
                 <button onClick={onClose} className="absolute right-4 top-4">
                     <X size={18} />
                 </button>
 
-                {/* Title */}
                 <h2 className="text-lg font-semibold mb-4">
                     {isLogin ? "Welcome Back" : "Create Account"}
                 </h2>
 
-                {/* LOGIN FORM */}
                 {isLogin ? (
                     <>
-                        {/* Email */}
                         <div className="mb-4">
                             <label className="text-sm font-medium">Email</label>
                             <input

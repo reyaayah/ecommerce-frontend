@@ -43,6 +43,7 @@ export const loginUser = async (payload: LoginPayload) => {
             },
             body: JSON.stringify(payload),
         });
+        console.log("Login response status:", res);
 
         const data = await res.json();
 
@@ -54,4 +55,26 @@ export const loginUser = async (payload: LoginPayload) => {
     } catch (error: any) {
         throw new Error(error.message);
     }
+};
+export interface GoogleLoginPayload {
+    // optional, if your backend requires any data
+    redirectUri?: string;
+}
+
+export const loginWithGoogle = async (data?: GoogleLoginPayload) => {
+    const res = await fetch(`${API_URL}/public/auth/google/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data || {}),
+    });
+
+    if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Google login failed");
+    }
+
+    // backend returns the Google OAuth URL as plain text or { url: string }
+    const text = await res.text();
+
+    return text;
 };

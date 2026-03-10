@@ -3,6 +3,9 @@
 import { useState } from "react"
 import { Eye, EyeOff, Mail, Lock, ArrowRight, CheckCircle2, ShoppingBag } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { loginUser, loginWithGoogle } from "@/services/auth"
+import toast from "react-hot-toast"
+import { signIn } from "next-auth/react"
 
 
 export default function LoginPage() {
@@ -13,15 +16,30 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const router = useRouter()
+
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setError("")
-        if (!email || !password) { setError("Please fill in all fields."); return }
-        setLoading(true)
-        await new Promise((r) => setTimeout(r, 1500))
-        setLoading(false)
-        router.push("/admin/dashboard")
-    }
+        e.preventDefault(); // prevents page refresh
+
+        try {
+            setLoading(true);
+            setError("");
+
+            const data = await loginUser({ email, password });
+
+            console.log("Login response:", data);
+            toast.success("Logged in successfully!");
+
+            router.push("/admin/dashboard");
+
+        } catch (error: any) {
+            console.error(error);
+            setError(error.message || "Login failed");
+            toast.error(error.message || "Login failed");
+
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const stats = [
         { value: "12.4k", label: "Orders/mo" },
@@ -34,6 +52,27 @@ export default function LoginPage() {
         { id: "#ORD4820", product: "Men's Sneakers", amount: "$89.00", status: "Pending" },
         { id: "#ORD4819", product: "Coffee Maker Pro", amount: "$79.99", status: "Shipped" },
     ]
+
+    const ssoButtons = [
+        { icon: "G", label: "Google", color: "text-red-500", provider: "google" },
+        { icon: "f", label: "Facebook", color: "text-blue-600 font-bold", provider: "facebook" },
+    ]
+    const handleGoogleLogin = async () => {
+        try {
+            setLoading(true);
+            setError("");
+
+            const url = await loginWithGoogle();
+            // redirect user to Google login
+            window.location.href = url;
+        } catch (err: any) {
+            setError(err.message || "Google login failed");
+            toast.error(err.message || "Google login failed");
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     return (
         <div className="min-h-screen flex font-sans bg-[#f5f6fa]">
@@ -125,12 +164,10 @@ export default function LoginPage() {
 
                     {/* SSO buttons */}
                     <div className="grid grid-cols-2 gap-3 mb-6">
-                        {[
-                            { icon: "G", label: "Google", color: "text-red-500" },
-                            { icon: "f", label: "Facebook", color: "text-blue-600 font-bold" },
-                        ].map((btn) => (
+                        {ssoButtons.map((btn) => (
                             <button
                                 key={btn.label}
+                                onClick={handleGoogleLogin}
                                 className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-[#C4C4C4]/30 rounded-xl text-sm font-medium text-slate-700 hover:bg-[#E0EFF6]/50 hover:border-[#70908B]/30 transition-all shadow-sm"
                             >
                                 <span className={`text-base ${btn.color}`}>{btn.icon}</span>
